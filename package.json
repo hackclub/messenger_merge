@@ -1,6 +1,6 @@
 {
   "name": "messenger_merge",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "mail merge for fb messenger",
   "main": "app.js",
   "scripts": {
@@ -22,6 +22,6 @@
     "node-xmpp-client": "^1.0.0-alpha19"
   },
   "bin": {
-    "xmpp_merge": "./bin/xmpp_merge"
+    "messenger_merge": "./bin/messenger_merge"
   }
 }

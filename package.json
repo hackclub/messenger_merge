@@ -1,6 +1,6 @@
 {
   "name": "messenger_merge",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "mail merge for fb messenger",
   "main": "app.js",
   "scripts": {

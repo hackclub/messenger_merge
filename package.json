@@ -1,0 +1,27 @@
+{
+  "name": "xmpp_merge",
+  "version": "0.0.0",
+  "description": "mail merge for xmpp",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hackedu/xmpp_merge"
+  },
+  "author": "Zach Latta <zach@zachlatta.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hackedu/xmpp_merge/issues"
+  },
+  "dependencies": {
+    "commander": "^2.6.0",
+    "fbgraph": "^0.3.0",
+    "ltx": "^0.8.0",
+    "node-xmpp-client": "^1.0.0-alpha19"
+  },
+  "bin": {
+    "xmpp_merge": "./bin/xmpp_merge"
+  }
+}

@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+
+var Client = require('node-xmpp-client');
+var program = require('commander');
+var graph = require('fbgraph');
+var ltx = require('ltx');
+
+var sendingHasBegun = false;
+var queuedMsgs = [];
+var chat;
+
+program
+	.version('0.0.1')
+	.option('-m, --message [msg]', 'Message to send')
+	.option('-a, --access-token [token]', 'Facebook access token')
+	.parse(process.argv);
+
+if (!program.message) {
+	throw new Error('--message is required');
+}
+
+if (!program.accessToken) {
+	throw new Error('--access-token is required');
+}
+
+graph.setAccessToken(program.accessToken);
+
+graph.get('/me', function (err, res) {
+	if (err) {
+		console.error(err);
+		process.exit(1);
+	}
+
+  chat = new Client({
+    jid: '-' + res.id + '@chat.facebook.com',
+    access_token: program.accessToken
+  });
+
+	chat.addListener('online', chatOnlineListener);
+	chat.addListener('error', chatErrorListener);
+});
+
+function readLines(input, func) {
+  var remaining = '';
+
+  input.on('data', function (data) {
+    remaining += data;
+    var index = remaining.indexOf('\n');
+    while (index > -1) {
+      var line = remaining.substring(0, index);
+      remaining = remaining.substring(index + 1);
+      func(line);
+      index = remaining.indexOf('\n');
+    }
+  });
+
+  input.on('end', function () {
+    if (remaining.length > 0) {
+      func(remaining);
+    }
+  });
+}
+
+function chatOnlineListener(data) {
+	readLines(process.stdin, function (line) {
+		var msg = new ltx.Element('message', { to: '-' + line + '@chat.facebook.com' })
+			.c('body')
+			.t(program.message)
+		queuedMsgs.push(msg);
+	});
+}
+
+function chatErrorListener(e) {
+	console.error("ABORT ABORT")
+  console.error(e);
+	console.error("ABORT ABORT")
+  process.exit(1);
+}
+
+setInterval(function () {
+	if (queuedMsgs.length > 0 && !sendingHasBegun) {
+		sendingHasBegun = true;
+	}
+
+	if (queuedMsgs.length && sendingHasBegun) {
+		var msg = queuedMsgs.pop();
+		chat.send(msg);
+	}
+
+	if (sendingHasBegun && queuedMsgs.length == 0) {
+		process.exit(0);
+	}
+}, 1000);

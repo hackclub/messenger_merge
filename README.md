@@ -1,5 +1,9 @@
 # Messenger Merge
 
+_This is a small utility we wrote for ourselves internally._
+
+---
+
 Mail merge for Facebook Messenger.
 
 ## Installation
